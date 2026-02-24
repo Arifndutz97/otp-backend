@@ -8,6 +8,7 @@ app.use(cors());
 app.use(express.json());
 
 const FONNTE_TOKEN = process.env.FONNTE_TOKEN;
+const otpStore = {};
 
 app.get("/", (req, res) => {
   res.json({ message: "OTP Backend Ready 🔥" });
@@ -29,7 +30,12 @@ app.post("/send-otp", async (req, res) => {
   }
 
   const otp = Math.floor(100000 + Math.random() * 900000);
+otpStore[phone] = {
+  otp,
+  expires: Date.now() + 5 * 60 * 1000
+};
 
+  
   try {
     if (type === "wa") {
       const response = await axios.post(
@@ -55,5 +61,26 @@ app.post("/send-otp", async (req, res) => {
     res.status(500).json({ error: "Failed" });
   }
 });
+app.post("/verify-otp", (req, res) => {
+  const { phone, otp } = req.body;
 
+  const data = otpStore[phone];
+
+  if (!data) {
+    return res.status(400).json({ error: "OTP not found" });
+  }
+
+  if (Date.now() > data.expires) {
+    delete otpStore[phone];
+    return res.status(400).json({ error: "OTP expired" });
+  }
+
+  if (data.otp != otp) {
+    return res.status(400).json({ error: "OTP salah" });
+  }
+
+  delete otpStore[phone];
+
+  res.json({ success: true });
+});
 module.exports = app;
