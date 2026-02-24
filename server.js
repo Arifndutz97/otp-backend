@@ -28,9 +28,9 @@ app.post("/send-otp", async (req, res) => {
   }
 
   const otp = Math.floor(100000 + Math.random() * 900000);
-console.log("TOKEN TERBACA:", FONNTE_TOKEN);
-  try {
 
+  try {
+console.log("TOKEN TERBACA:", FONNTE_TOKEN);
     if (type === "wa") {
 
       const response = await axios.post(
