@@ -28,7 +28,7 @@ app.post("/send-otp", async (req, res) => {
   }
 
   const otp = Math.floor(100000 + Math.random() * 900000);
-
+console.log("TOKEN TERBACA:", FONNTE_TOKEN);
   try {
 
     if (type === "wa") {
