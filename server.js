@@ -3,13 +3,14 @@ const cors = require("cors");
 const axios = require("axios");
 
 const app = express();
+
 app.use(cors());
 app.use(express.json());
 
-
 const FONNTE_TOKEN = process.env.FONNTE_TOKEN;
+
 app.get("/", (req, res) => {
-  res.send("OTP Backend Ready 🔥");
+  res.json({ message: "OTP Backend Ready 🔥" });
 });
 
 app.post("/send-otp", async (req, res) => {
@@ -30,9 +31,7 @@ app.post("/send-otp", async (req, res) => {
   const otp = Math.floor(100000 + Math.random() * 900000);
 
   try {
-console.log("TOKEN TERBACA:", FONNTE_TOKEN);
     if (type === "wa") {
-
       const response = await axios.post(
         "https://api.fonnte.com/send",
         {
@@ -46,19 +45,15 @@ console.log("TOKEN TERBACA:", FONNTE_TOKEN);
         }
       );
 
-      console.log("FONNTE SUCCESS:", response.data);
+      console.log(response.data);
     }
 
     res.json({ success: true });
 
   } catch (err) {
-    console.log("FONNTE ERROR:", err.response?.data || err.message);
-    res.status(500).json({ error: "Gagal kirim WA" });
+    console.log(err.response?.data || err.message);
+    res.status(500).json({ error: "Failed" });
   }
 });
 
-const PORT = process.env.PORT || 3000;
-
-app.listen(PORT, () =>
-  console.log("Server running on port " + PORT)
-);
+module.exports = app;
