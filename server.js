@@ -6,7 +6,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-const FONNTE_TOKEN = process.env.FONNTE_TOKEN;
+const FONNTE_TOKEN = process.env.WwiiDKHwPdPStLVpZDtB;
 
 app.get("/", (req, res) => {
   res.send("OTP Backend Ready 🔥");
