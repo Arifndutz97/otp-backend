@@ -179,48 +179,5 @@ app.post("/verify-otp", async (req, res) => {
   }
 });
 
-/* =========================
-   AUTH LOOKUP USERNAME
-========================= */
-
-app.post("/auth/lookup", async (req, res) => {
-
-  try {
-
-    let { username } = req.body;
-
-    if (!username) {
-      return res.status(400).json({ error: "Username required" });
-    }
-
-    username = username.trim().toLowerCase();
-
-    const userDoc = await db.collection("users").doc(username).get();
-
-    if (!userDoc.exists) {
-      return res.status(404).json({ error: "Username tidak ditemukan" });
-    }
-
-    const data = userDoc.data();
-
-    if (!data.email) {
-      return res.status(500).json({ error: "Email tidak tersedia" });
-    }
-
-    res.json({
-      email: data.email
-    });
-
-  } catch (err) {
-
-    console.error("AUTH LOOKUP ERROR:", err);
-
-    res.status(500).json({
-      error: "Server error"
-    });
-
-  }
-
-});
-   
 module.exports = app;
+
